@@ -59,6 +59,9 @@ fn run(cli: Cli) -> Result<()> {
         Cmd::Demo { out } => {
             let id = format!("comeback-{}", now_ms());
             let out = out.unwrap_or_else(|| captures_dir().join(format!("{id}.comeback")));
+            if out.exists() {
+                anyhow::bail!("{} already exists", out.display());
+            }
             let m = demo::run(&out, id)?;
             print!("{}", summary::paste_text(&m, &out));
         }

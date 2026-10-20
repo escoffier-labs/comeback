@@ -65,3 +65,15 @@ fn inspect_reports_missing_captures() {
     assert_eq!(out.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&out.stderr).contains("no captures in"));
 }
+
+#[test]
+fn demo_refuses_an_existing_out() {
+    let dir = tempfile::tempdir().unwrap();
+    let out = comeback()
+        .args(["demo", "--out"])
+        .arg(dir.path())
+        .output()
+        .unwrap();
+    assert_eq!(out.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&out.stderr).contains("already exists"));
+}

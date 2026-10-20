@@ -17,7 +17,8 @@ pub fn load(dir: &Path) -> Result<Manifest> {
     serde_json::from_value(raw).with_context(|| format!("parsing {}", path.display()))
 }
 
-/// The capture directory with the largest `comeback-<ms>.comeback` timestamp.
+/// The finished capture directory (one with a `comeback.json`) with the largest
+/// `comeback-<ms>.comeback` timestamp.
 pub fn latest(captures: &Path) -> Result<PathBuf> {
     let mut best: Option<(u64, PathBuf)> = None;
     if let Ok(entries) = fs::read_dir(captures) {
@@ -30,6 +31,9 @@ pub fn latest(captures: &Path) -> Result<PathBuf> {
             else {
                 continue;
             };
+            if !e.path().join("comeback.json").is_file() {
+                continue;
+            }
             if best.as_ref().is_none_or(|(b, _)| ms > *b) {
                 best = Some((ms, e.path()));
             }
@@ -64,7 +68,12 @@ mod tests {
             "notes.txt",
         ] {
             std::fs::create_dir(dir.path().join(name)).unwrap();
+            if name.starts_with("comeback-") {
+                std::fs::write(dir.path().join(name).join("comeback.json"), "").unwrap();
+            }
         }
+        // newer by name but never finished: no comeback.json
+        std::fs::create_dir(dir.path().join("comeback-999.comeback")).unwrap();
         assert_eq!(
             latest(dir.path()).unwrap(),
             dir.path().join("comeback-900.comeback")

@@ -45,8 +45,17 @@ pub fn compile(
         },
         cfg,
     );
-    fs::create_dir_all(out.join("frames"))
-        .with_context(|| format!("creating {}", out.display()))?;
+    let mut partial_name = out
+        .file_name()
+        .with_context(|| format!("{} has no file name", out.display()))?
+        .to_os_string();
+    partial_name.push(".partial");
+    let partial = out.with_file_name(partial_name);
+    if partial.exists() {
+        fs::remove_dir_all(&partial).with_context(|| format!("removing {}", partial.display()))?;
+    }
+    fs::create_dir_all(partial.join("frames"))
+        .with_context(|| format!("creating {}", partial.display()))?;
 
     let mut marks = input.marks;
     let mut frames = Vec::with_capacity(selected.len());
@@ -59,7 +68,7 @@ pub fn compile(
         }
         draw_badge(&mut img, n, s.at_ms);
         let file = format!("frames/frame-{n:02}.png");
-        img.save(out.join(&file))
+        img.save(partial.join(&file))
             .with_context(|| format!("writing {file}"))?;
         for m in marks.iter_mut().filter(|m| s.mark_ids.contains(&m.id)) {
             m.keyframe = Some(n);
@@ -75,7 +84,7 @@ pub fn compile(
         frames.push(img);
     }
     render_sheet(&frames)
-        .save(out.join("contact-sheet.png"))
+        .save(partial.join("contact-sheet.png"))
         .context("writing contact-sheet.png")?;
 
     let manifest = Manifest {
@@ -96,11 +105,16 @@ pub fn compile(
         notes: input.notes,
     };
     fs::write(
-        out.join("comeback.json"),
+        partial.join("comeback.json"),
         serde_json::to_vec_pretty(&manifest)?,
     )
     .context("writing comeback.json")?;
-    fs::write(out.join("summary.md"), summary_md(&manifest, out)).context("writing summary.md")?;
+    fs::write(partial.join("summary.md"), summary_md(&manifest, out))
+        .context("writing summary.md")?;
+    if out.exists() {
+        fs::remove_dir_all(out).with_context(|| format!("removing {}", out.display()))?;
+    }
+    fs::rename(&partial, out).with_context(|| format!("moving bundle to {}", out.display()))?;
     Ok(manifest)
 }
 
@@ -216,5 +230,60 @@ mod tests {
             .unwrap()
             .to_rgb8();
         assert_eq!(*frame.get_pixel(330, 180), Rgb([40, 40, 40]));
+    }
+
+    #[test]
+    fn recompiling_replaces_the_bundle_atomically() {
+        let dir = tempfile::tempdir().unwrap();
+        let out = dir.path().join("comeback-3.comeback");
+        let make = |clicks: &[u64]| CompileInput {
+            id: "comeback-3".into(),
+            started_at: "2026-10-19T00:00:00Z".into(),
+            backend: "test".into(),
+            target: Target {
+                kind: TargetKind::Screen,
+                rect: [0, 0, 640, 360],
+                scale: 1.0,
+                app: None,
+                title: None,
+            },
+            duration_ms: 10_000,
+            events: clicks
+                .iter()
+                .map(|&at_ms| Event {
+                    at_ms,
+                    kind: EventKind::Click,
+                    x: 0.5,
+                    y: 0.5,
+                    to: None,
+                    button: None,
+                    label: None,
+                })
+                .collect(),
+            marks: vec![],
+            words: vec![],
+            transcript_model: None,
+            candidates: vec![],
+            page: vec![],
+            notes: vec![],
+        };
+        let frame = |_| Ok(RgbImage::from_pixel(640, 360, Rgb([40, 40, 40])));
+        compile(
+            make(&[2_000, 6_000]),
+            &KeyframeConfig::default(),
+            frame,
+            &out,
+        )
+        .unwrap();
+        assert!(out.join("frames/frame-02.png").is_file());
+        compile(make(&[2_000]), &KeyframeConfig::default(), frame, &out).unwrap();
+        assert!(out.join("frames/frame-01.png").is_file());
+        assert!(!out.join("frames/frame-02.png").exists());
+        let partials = std::fs::read_dir(dir.path())
+            .unwrap()
+            .flatten()
+            .filter(|e| e.file_name().to_string_lossy().ends_with(".partial"))
+            .count();
+        assert_eq!(partials, 0);
     }
 }
