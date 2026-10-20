@@ -1208,7 +1208,7 @@ pub fn draw_ripple(img: &mut RgbImage, x: f64, y: f64) {
 
 Layout rule: rows are filled greedily at a 400 px target height while the row fits in 1600 px, and every row gets at least one frame. Each row except the last is then scaled to exactly 1600 px wide. The last row keeps the smaller of its fitted height and 400 px. The canvas is as wide as the widest row. The whole layout is then scaled down by `min(1, 1600 / height, sqrt(1_560_000 / (width * height)))`.
 
-- [ ] Create `sheet.rs` holding only the tests:
+- [x] Create `sheet.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1259,8 +1259,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core sheet`. Expect a compile FAIL: `cannot find function layout`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core sheet`. Expect a compile FAIL: `cannot find function layout`.
+- [x] Add above the tests:
 
 ```rust
 use image::imageops::{self, FilterType};
@@ -1349,8 +1349,8 @@ pub fn render_sheet(frames: &[RgbImage]) -> RgbImage {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core sheet`. Expect `4 passed`. If a containment assertion fails by 1 px, the cause is floor rounding on `x + w`. Fix it by clamping each cell's `w` to `canvas_w - x` (and `h` likewise) after scaling. Leave the test as written.
-- [ ] Commit: `git add -A && git commit -m "feat(core): lay out and render the contact sheet"`
+- [x] Run `cargo test -p comeback-core sheet`. Expect `4 passed`. If a containment assertion fails by 1 px, the cause is floor rounding on `x + w`. Fix it by clamping each cell's `w` to `canvas_w - x` (and `h` likewise) after scaling. Leave the test as written.
+- [x] Commit: `git add -A && git commit -m "feat(core): lay out and render the contact sheet"`
 
 ---
 
