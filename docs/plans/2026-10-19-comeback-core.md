@@ -128,7 +128,7 @@ cp /usr/share/doc/fonts-dejavu-core/copyright crates/comeback-core/assets/DejaVu
 ```
 
 - [x] Run `cargo check --workspace`. Expect `Finished` with no errors.
-- [ ] Commit: `git add -A && git commit -m "build: scaffold comeback workspace"`
+- [x] Commit: `git add -A && git commit -m "build: scaffold comeback workspace"`
 
 ---
 
