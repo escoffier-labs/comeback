@@ -272,14 +272,16 @@ fn assign_words(sel: &mut [Selected], words: &[Word], cfg: &KeyframeConfig) {
                 || words[i].start_ms.saturating_sub(words[i - 1].end_ms) >= cfg.clause_pause_ms
         })
         .collect();
-    let mut idx: Vec<usize> = sel
+    let mut order: Vec<usize> = (0..sel.len()).collect();
+    order.sort_by_key(|&k| (sel[k].anchor_ms, sel[k].at_ms));
+    let mut idx: Vec<usize> = order
         .iter()
-        .map(|s| {
+        .map(|&k| {
             let mut i = words
                 .iter()
-                .rposition(|w| w.start_ms <= s.anchor_ms)
+                .rposition(|w| w.start_ms <= sel[k].anchor_ms)
                 .unwrap_or(0);
-            if words[i].end_ms < s.anchor_ms && i + 1 < words.len() && starts[i + 1] {
+            if words[i].end_ms < sel[k].anchor_ms && i + 1 < words.len() && starts[i + 1] {
                 i += 1;
             }
             while i > 0 && !starts[i] {
@@ -289,16 +291,16 @@ fn assign_words(sel: &mut [Selected], words: &[Word], cfg: &KeyframeConfig) {
         })
         .collect();
     idx[0] = 0;
-    for k in 1..idx.len() {
-        idx[k] = idx[k].max(idx[k - 1]);
+    for p in 1..idx.len() {
+        idx[p] = idx[p].max(idx[p - 1]);
     }
-    for k in 0..sel.len() {
-        let end = if k + 1 < sel.len() {
-            idx[k + 1]
+    for p in 0..order.len() {
+        let end = if p + 1 < order.len() {
+            idx[p + 1]
         } else {
             words.len()
         };
-        sel[k].said = words[idx[k]..end]
+        sel[order[p]].said = words[idx[p]..end]
             .iter()
             .map(|w| w.w.as_str())
             .collect::<Vec<_>>()
@@ -617,5 +619,37 @@ mod tests {
         assert_eq!(s.len(), 1);
         assert_eq!(s[0].reason, Reason::Midpoint);
         assert_eq!(s[0].at_ms, 4_000);
+    }
+
+    #[test]
+    fn words_follow_anchor_order_not_frame_order() {
+        // a slow fade from 5.0 s to 7.5 s; the cue snaps to its end, after the click
+        let c: Vec<Candidate> = (0..=40)
+            .map(|i| {
+                let t = i * 250;
+                let v = if t < 5_000 {
+                    0
+                } else if t >= 7_500 {
+                    255
+                } else {
+                    ((t - 5_000) * 255 / 2_500) as u8
+                };
+                cand(t, v)
+            })
+            .collect();
+        let words = [
+            word("Intro.", 1_000, 1_400),
+            word("now", 5_000, 5_150),
+            word("watch", 5_200, 5_350),
+            word("this.", 5_400, 5_700),
+            word("Clicked", 6_600, 6_750),
+            word("it.", 6_800, 7_000),
+        ];
+        let s = run(10_000, &[click(6_500, None)], &[], &words, &c);
+        assert_eq!(s.len(), 2);
+        assert_eq!((s[0].reason, s[0].at_ms), (Reason::Click, 6_500));
+        assert_eq!((s[1].reason, s[1].at_ms), (Reason::Cue, 7_500));
+        assert_eq!(s[0].said, "Clicked it.");
+        assert_eq!(s[1].said, "Intro. now watch this.");
     }
 }
