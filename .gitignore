@@ -1,2 +1,3 @@
 target/
 .claude/memory-handoffs/
+error.log
