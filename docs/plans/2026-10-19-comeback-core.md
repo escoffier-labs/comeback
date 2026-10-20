@@ -503,7 +503,7 @@ These rules come from the spec's "Keyframe selection" section. Decisions the spe
 - Coverage may add keyframes past the budget, up to `hard_cap` (12), or past it only if marks alone exceed 12.
 - When an anchor falls in silence after a finished clause, the keyframe's words start at the next clause.
 
-- [ ] Create `keyframes.rs` holding only the tests:
+- [x] Create `keyframes.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -668,8 +668,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core keyframes`. Expect a compile FAIL: `cannot find type Candidate`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core keyframes`. Expect a compile FAIL: `cannot find type Candidate`.
+- [x] Add above the tests:
 
 ```rust
 use crate::grid::LumaGrid;
@@ -1053,8 +1053,8 @@ pub fn select(input: &SelectInput, cfg: &KeyframeConfig) -> Vec<Selected> {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core keyframes`. Expect `10 passed`. If `coverage_fills_long_gaps_from_leftovers` fails, check that leftovers are only budget overflow: the `accept` check must run before the budget check, as written.
-- [ ] Commit: `git add -A && git commit -m "feat(core): select keyframes from marks, clicks, cues and scene changes"`
+- [x] Run `cargo test -p comeback-core keyframes`. Expect `10 passed`. If `coverage_fills_long_gaps_from_leftovers` fails, check that leftovers are only budget overflow: the `accept` check must run before the budget check, as written.
+- [x] Commit: `git add -A && git commit -m "feat(core): select keyframes from marks, clicks, cues and scene changes"`
 
 ---
 
