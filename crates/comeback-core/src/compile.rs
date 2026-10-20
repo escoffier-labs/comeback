@@ -5,7 +5,9 @@ use anyhow::{Context, Result};
 use image::RgbImage;
 
 use crate::keyframes::{Candidate, KeyframeConfig, SelectInput, select};
-use crate::model::{Event, Keyframe, Manifest, Mark, PageEvent, SCHEMA, Target, Transcript, Word};
+use crate::model::{
+    Event, Keyframe, Manifest, Mark, PageEvent, Reason, SCHEMA, Target, Transcript, Word,
+};
 use crate::render::{draw_badge, draw_ripple};
 use crate::sheet::render_sheet;
 use crate::summary::summary_md;
@@ -52,7 +54,7 @@ pub fn compile(
     for (i, s) in selected.iter().enumerate() {
         let n = i as u32 + 1;
         let mut img = frame_at(s.at_ms).with_context(|| format!("frame at {} ms", s.at_ms))?;
-        if let Some([x, y]) = s.point {
+        if let (Reason::Click, Some([x, y])) = (s.reason, s.point) {
             draw_ripple(&mut img, x, y);
         }
         draw_badge(&mut img, n, s.at_ms);
@@ -169,5 +171,50 @@ mod tests {
         let back: Manifest =
             serde_json::from_slice(&std::fs::read(out.join("comeback.json")).unwrap()).unwrap();
         assert_eq!(back, m);
+    }
+
+    #[test]
+    fn drags_get_no_ripple() {
+        let dir = tempfile::tempdir().unwrap();
+        let out = dir.path().join("comeback-2.comeback");
+        let input = CompileInput {
+            id: "comeback-2".into(),
+            started_at: "2026-10-19T00:00:00Z".into(),
+            backend: "test".into(),
+            target: Target {
+                kind: TargetKind::Screen,
+                rect: [0, 0, 640, 360],
+                scale: 1.0,
+                app: None,
+                title: None,
+            },
+            duration_ms: 10_000,
+            events: vec![Event {
+                at_ms: 2_000,
+                kind: EventKind::Drag,
+                x: 0.5,
+                y: 0.5,
+                to: Some([0.9, 0.5]),
+                button: None,
+                label: None,
+            }],
+            marks: vec![],
+            words: vec![],
+            transcript_model: None,
+            candidates: vec![],
+            page: vec![],
+            notes: vec![],
+        };
+        compile(
+            input,
+            &KeyframeConfig::default(),
+            |_| Ok(RgbImage::from_pixel(640, 360, Rgb([40, 40, 40]))),
+            &out,
+        )
+        .unwrap();
+        let frame = image::open(out.join("frames/frame-01.png"))
+            .unwrap()
+            .to_rgb8();
+        assert_eq!(*frame.get_pixel(330, 180), Rgb([40, 40, 40]));
     }
 }
