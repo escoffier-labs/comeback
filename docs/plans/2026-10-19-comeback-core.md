@@ -43,7 +43,7 @@
 **Files:**
 - Create: `Cargo.toml`, `LICENSE`, `crates/comeback-core/Cargo.toml`, `crates/comeback-core/src/lib.rs`, `crates/comeback/Cargo.toml`, `crates/comeback/src/main.rs`, `crates/comeback-core/assets/*`
 
-- [ ] Create `Cargo.toml`:
+- [x] Create `Cargo.toml`:
 
 ```toml
 [workspace]
@@ -65,7 +65,7 @@ serde_json = "1.0.154"
 tempfile = "3.27.0"
 ```
 
-- [ ] Create `crates/comeback-core/Cargo.toml`:
+- [x] Create `crates/comeback-core/Cargo.toml`:
 
 ```toml
 [package]
@@ -85,7 +85,7 @@ serde_json.workspace = true
 tempfile.workspace = true
 ```
 
-- [ ] Create `crates/comeback/Cargo.toml`:
+- [x] Create `crates/comeback/Cargo.toml`:
 
 ```toml
 [package]
@@ -105,21 +105,21 @@ serde_json.workspace = true
 tempfile.workspace = true
 ```
 
-- [ ] Create `crates/comeback-core/src/lib.rs` (empty for now):
+- [x] Create `crates/comeback-core/src/lib.rs` (empty for now):
 
 ```rust
 //! Platform-free core of comeback: timeline in, bundle out.
 ```
 
-- [ ] Create `crates/comeback/src/main.rs`:
+- [x] Create `crates/comeback/src/main.rs`:
 
 ```rust
 fn main() {}
 ```
 
-- [ ] `.gitignore` already exists with `target/` and `.claude/memory-handoffs/`. Leave it as is.
-- [ ] Create `LICENSE`: the standard MIT text with the line `Copyright (c) 2026 Solomon Neas`.
-- [ ] Copy the font and its license:
+- [x] `.gitignore` already exists with `target/` and `.claude/memory-handoffs/`. Leave it as is.
+- [x] Create `LICENSE`: the standard MIT text with the line `Copyright (c) 2026 Solomon Neas`.
+- [x] Copy the font and its license:
 
 ```sh
 mkdir -p crates/comeback-core/assets
@@ -127,7 +127,7 @@ cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf crates/comeback-core/ass
 cp /usr/share/doc/fonts-dejavu-core/copyright crates/comeback-core/assets/DejaVu-LICENSE
 ```
 
-- [ ] Run `cargo check --workspace`. Expect `Finished` with no errors.
+- [x] Run `cargo check --workspace`. Expect `Finished` with no errors.
 - [ ] Commit: `git add -A && git commit -m "build: scaffold comeback workspace"`
 
 ---

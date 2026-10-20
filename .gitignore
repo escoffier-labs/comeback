@@ -1,3 +1,6 @@
 target/
 .claude/memory-handoffs/
 error.log
+.graphtrail/
+.brigade/
+memory/
