@@ -43,7 +43,7 @@
 **Files:**
 - Create: `Cargo.toml`, `LICENSE`, `crates/comeback-core/Cargo.toml`, `crates/comeback-core/src/lib.rs`, `crates/comeback/Cargo.toml`, `crates/comeback/src/main.rs`, `crates/comeback-core/assets/*`
 
-- [ ] Create `Cargo.toml`:
+- [x] Create `Cargo.toml`:
 
 ```toml
 [workspace]
@@ -65,7 +65,7 @@ serde_json = "1.0.154"
 tempfile = "3.27.0"
 ```
 
-- [ ] Create `crates/comeback-core/Cargo.toml`:
+- [x] Create `crates/comeback-core/Cargo.toml`:
 
 ```toml
 [package]
@@ -85,7 +85,7 @@ serde_json.workspace = true
 tempfile.workspace = true
 ```
 
-- [ ] Create `crates/comeback/Cargo.toml`:
+- [x] Create `crates/comeback/Cargo.toml`:
 
 ```toml
 [package]
@@ -105,21 +105,21 @@ serde_json.workspace = true
 tempfile.workspace = true
 ```
 
-- [ ] Create `crates/comeback-core/src/lib.rs` (empty for now):
+- [x] Create `crates/comeback-core/src/lib.rs` (empty for now):
 
 ```rust
 //! Platform-free core of comeback: timeline in, bundle out.
 ```
 
-- [ ] Create `crates/comeback/src/main.rs`:
+- [x] Create `crates/comeback/src/main.rs`:
 
 ```rust
 fn main() {}
 ```
 
-- [ ] `.gitignore` already exists with `target/` and `.claude/memory-handoffs/`. Leave it as is.
-- [ ] Create `LICENSE`: the standard MIT text with the line `Copyright (c) 2026 Solomon Neas`.
-- [ ] Copy the font and its license:
+- [x] `.gitignore` already exists with `target/` and `.claude/memory-handoffs/`. Leave it as is.
+- [x] Create `LICENSE`: the standard MIT text with the line `Copyright (c) 2026 Solomon Neas`.
+- [x] Copy the font and its license:
 
 ```sh
 mkdir -p crates/comeback-core/assets
@@ -127,8 +127,8 @@ cp /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf crates/comeback-core/ass
 cp /usr/share/doc/fonts-dejavu-core/copyright crates/comeback-core/assets/DejaVu-LICENSE
 ```
 
-- [ ] Run `cargo check --workspace`. Expect `Finished` with no errors.
-- [ ] Commit: `git add -A && git commit -m "build: scaffold comeback workspace"`
+- [x] Run `cargo check --workspace`. Expect `Finished` with no errors.
+- [x] Commit: `git add -A && git commit -m "build: scaffold comeback workspace"`
 
 ---
 
@@ -138,7 +138,7 @@ cp /usr/share/doc/fonts-dejavu-core/copyright crates/comeback-core/assets/DejaVu
 - Create: `crates/comeback-core/src/model.rs`
 - Modify: `crates/comeback-core/src/lib.rs`
 
-- [ ] Add `pub mod model;` to `lib.rs`, then create `model.rs` holding only the test:
+- [x] Add `pub mod model;` to `lib.rs`, then create `model.rs` holding only the test:
 
 ```rust
 #[cfg(test)]
@@ -200,8 +200,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core model`. Expect a compile FAIL: `cannot find type Manifest`.
-- [ ] Put this above the test module in `model.rs`:
+- [x] Run `cargo test -p comeback-core model`. Expect a compile FAIL: `cannot find type Manifest`.
+- [x] Put this above the test module in `model.rs`:
 
 ```rust
 use serde::{Deserialize, Serialize};
@@ -329,8 +329,8 @@ pub struct Word {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core model`. Expect `1 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): add comeback.json manifest types"`
+- [x] Run `cargo test -p comeback-core model`. Expect `1 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): add comeback.json manifest types"`
 
 ---
 
@@ -340,7 +340,7 @@ pub struct Word {
 - Create: `crates/comeback-core/src/time.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod time;`)
 
-- [ ] Create `time.rs` holding only the test:
+- [x] Create `time.rs` holding only the test:
 
 ```rust
 #[cfg(test)]
@@ -357,8 +357,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core time`. Expect a compile FAIL: `cannot find function fmt_ms`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core time`. Expect a compile FAIL: `cannot find function fmt_ms`.
+- [x] Add above the tests:
 
 ```rust
 /// Milliseconds as `M:SS`, truncating partial seconds.
@@ -368,8 +368,8 @@ pub fn fmt_ms(ms: u64) -> String {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core time`. Expect `1 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): add M:SS time formatting"`
+- [x] Run `cargo test -p comeback-core time`. Expect `1 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): add M:SS time formatting"`
 
 ---
 
@@ -379,7 +379,7 @@ pub fn fmt_ms(ms: u64) -> String {
 - Create: `crates/comeback-core/src/grid.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod grid;`)
 
-- [ ] Create `grid.rs` holding only the tests:
+- [x] Create `grid.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -418,8 +418,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core grid`. Expect a compile FAIL: `cannot find type LumaGrid`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core grid`. Expect a compile FAIL: `cannot find type LumaGrid`.
+- [x] Add above the tests:
 
 ```rust
 use image::RgbImage;
@@ -484,8 +484,8 @@ impl LumaGrid {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core grid`. Expect `3 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): add luma grid for scene diffs"`
+- [x] Run `cargo test -p comeback-core grid`. Expect `3 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): add luma grid for scene diffs"`
 
 ---
 
@@ -503,7 +503,7 @@ These rules come from the spec's "Keyframe selection" section. Decisions the spe
 - Coverage may add keyframes past the budget, up to `hard_cap` (12), or past it only if marks alone exceed 12.
 - When an anchor falls in silence after a finished clause, the keyframe's words start at the next clause.
 
-- [ ] Create `keyframes.rs` holding only the tests:
+- [x] Create `keyframes.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -668,8 +668,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core keyframes`. Expect a compile FAIL: `cannot find type Candidate`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core keyframes`. Expect a compile FAIL: `cannot find type Candidate`.
+- [x] Add above the tests:
 
 ```rust
 use crate::grid::LumaGrid;
@@ -1053,8 +1053,8 @@ pub fn select(input: &SelectInput, cfg: &KeyframeConfig) -> Vec<Selected> {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core keyframes`. Expect `10 passed`. If `coverage_fills_long_gaps_from_leftovers` fails, check that leftovers are only budget overflow: the `accept` check must run before the budget check, as written.
-- [ ] Commit: `git add -A && git commit -m "feat(core): select keyframes from marks, clicks, cues and scene changes"`
+- [x] Run `cargo test -p comeback-core keyframes`. Expect `10 passed`. If `coverage_fills_long_gaps_from_leftovers` fails, check that leftovers are only budget overflow: the `accept` check must run before the budget check, as written.
+- [x] Commit: `git add -A && git commit -m "feat(core): select keyframes from marks, clicks, cues and scene changes"`
 
 ---
 
@@ -1064,7 +1064,7 @@ pub fn select(input: &SelectInput, cfg: &KeyframeConfig) -> Vec<Selected> {
 - Create: `crates/comeback-core/src/render.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod render;`)
 
-- [ ] Create `render.rs` holding only the tests:
+- [x] Create `render.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1096,8 +1096,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core render`. Expect a compile FAIL: `cannot find function draw_badge`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core render`. Expect a compile FAIL: `cannot find function draw_badge`.
+- [x] Add above the tests:
 
 ```rust
 use ab_glyph::{point, Font, FontRef, PxScale, ScaleFont};
@@ -1195,8 +1195,8 @@ pub fn draw_ripple(img: &mut RgbImage, x: f64, y: f64) {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core render`. Expect `3 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): draw keyframe badges and click ripples"`
+- [x] Run `cargo test -p comeback-core render`. Expect `3 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): draw keyframe badges and click ripples"`
 
 ---
 
@@ -1208,7 +1208,7 @@ pub fn draw_ripple(img: &mut RgbImage, x: f64, y: f64) {
 
 Layout rule: rows are filled greedily at a 400 px target height while the row fits in 1600 px, and every row gets at least one frame. Each row except the last is then scaled to exactly 1600 px wide. The last row keeps the smaller of its fitted height and 400 px. The canvas is as wide as the widest row. The whole layout is then scaled down by `min(1, 1600 / height, sqrt(1_560_000 / (width * height)))`.
 
-- [ ] Create `sheet.rs` holding only the tests:
+- [x] Create `sheet.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1259,8 +1259,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core sheet`. Expect a compile FAIL: `cannot find function layout`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core sheet`. Expect a compile FAIL: `cannot find function layout`.
+- [x] Add above the tests:
 
 ```rust
 use image::imageops::{self, FilterType};
@@ -1349,8 +1349,8 @@ pub fn render_sheet(frames: &[RgbImage]) -> RgbImage {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core sheet`. Expect `4 passed`. If a containment assertion fails by 1 px, the cause is floor rounding on `x + w`. Fix it by clamping each cell's `w` to `canvas_w - x` (and `h` likewise) after scaling. Leave the test as written.
-- [ ] Commit: `git add -A && git commit -m "feat(core): lay out and render the contact sheet"`
+- [x] Run `cargo test -p comeback-core sheet`. Expect `4 passed`. If a containment assertion fails by 1 px, the cause is floor rounding on `x + w`. Fix it by clamping each cell's `w` to `canvas_w - x` (and `h` likewise) after scaling. Leave the test as written.
+- [x] Commit: `git add -A && git commit -m "feat(core): lay out and render the contact sheet"`
 
 ---
 
@@ -1360,7 +1360,7 @@ pub fn render_sheet(frames: &[RgbImage]) -> RgbImage {
 - Create: `crates/comeback-core/src/summary.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod summary;`)
 
-- [ ] Create `summary.rs` holding only the tests:
+- [x] Create `summary.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1430,8 +1430,8 @@ Contact sheet: /tmp/b.comeback/contact-sheet.png
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core summary`. Expect a compile FAIL: `cannot find function paste_text`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core summary`. Expect a compile FAIL: `cannot find function paste_text`.
+- [x] Add above the tests:
 
 ```rust
 use std::fmt::Write;
@@ -1477,8 +1477,8 @@ pub fn summary_md(m: &Manifest, dir: &Path) -> String {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core summary`. Expect `3 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): render paste text and summary.md"`
+- [x] Run `cargo test -p comeback-core summary`. Expect `3 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): render paste text and summary.md"`
 
 ---
 
@@ -1488,7 +1488,7 @@ pub fn summary_md(m: &Manifest, dir: &Path) -> String {
 - Create: `crates/comeback-core/src/compile.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod compile;`)
 
-- [ ] Create `compile.rs` holding only the test:
+- [x] Create `compile.rs` holding only the test:
 
 ```rust
 #[cfg(test)]
@@ -1543,8 +1543,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core compile`. Expect a compile FAIL: `cannot find struct CompileInput`.
-- [ ] Add above the test:
+- [x] Run `cargo test -p comeback-core compile`. Expect a compile FAIL: `cannot find struct CompileInput`.
+- [x] Add above the test:
 
 ```rust
 use std::fs;
@@ -1634,8 +1634,8 @@ pub fn compile(
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core compile`. Expect `1 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): compile a timeline into a bundle"`
+- [x] Run `cargo test -p comeback-core compile`. Expect `1 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): compile a timeline into a bundle"`
 
 ---
 
@@ -1645,7 +1645,7 @@ pub fn compile(
 - Create: `crates/comeback-core/src/bundle.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod bundle;`)
 
-- [ ] Create `bundle.rs` holding only the tests:
+- [x] Create `bundle.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1680,8 +1680,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core bundle`. Expect a compile FAIL: `cannot find function latest`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core bundle`. Expect a compile FAIL: `cannot find function latest`.
+- [x] Add above the tests:
 
 ```rust
 use std::fs;
@@ -1732,9 +1732,9 @@ pub fn resolve(arg: &str, captures: &Path) -> Result<PathBuf> {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core bundle`. Expect `3 passed`.
-- [ ] Run `cargo test -p comeback-core`. Expect every core test to pass (29 total).
-- [ ] Commit: `git add -A && git commit -m "feat(core): load bundles and resolve latest"`
+- [x] Run `cargo test -p comeback-core bundle`. Expect `3 passed`.
+- [x] Run `cargo test -p comeback-core`. Expect every core test to pass (29 total).
+- [x] Commit: `git add -A && git commit -m "feat(core): load bundles and resolve latest"`
 
 ---
 
@@ -1746,7 +1746,7 @@ pub fn resolve(arg: &str, captures: &Path) -> Result<PathBuf> {
 
 The captures directory is `$COMEBACK_CAPTURES_DIR` when set (tests use this), else `$XDG_DATA_HOME/comeback/captures`, else `$HOME/.local/share/comeback/captures`. `demo` without `--out` writes `comeback-<unix_ms>.comeback` there.
 
-- [ ] Create `crates/comeback/tests/cli.rs`:
+- [x] Create `crates/comeback/tests/cli.rs`:
 
 ```rust
 use std::process::Command;
@@ -1794,8 +1794,8 @@ fn inspect_reports_missing_captures() {
 }
 ```
 
-- [ ] Run `cargo test -p comeback --test cli`. Expect FAIL: `demo_then_inspect` panics because the binary has no subcommands (the status is not success).
-- [ ] Create `crates/comeback/src/demo.rs`:
+- [x] Run `cargo test -p comeback --test cli`. Expect FAIL: `demo_then_inspect` panics because the binary has no subcommands (the status is not success).
+- [x] Create `crates/comeback/src/demo.rs`:
 
 ```rust
 //! A synthetic 20 s capture: a click on "New tab" at 0:03, a panel appearing at 0:05,
@@ -1930,7 +1930,7 @@ pub fn run(out: &Path, id: String) -> Result<Manifest> {
 }
 ```
 
-- [ ] Replace `crates/comeback/src/main.rs`:
+- [x] Replace `crates/comeback/src/main.rs`:
 
 ```rust
 mod demo;
@@ -2012,8 +2012,8 @@ fn main() -> ExitCode {
 }
 ```
 
-- [ ] Run `cargo test -p comeback --test cli`. Expect `2 passed`.
-- [ ] Run `cargo run -q -p comeback -- demo --out /tmp/comeback-demo.comeback`. Expect exactly:
+- [x] Run `cargo test -p comeback --test cli`. Expect `2 passed`.
+- [x] Run `cargo run -q -p comeback -- demo --out /tmp/comeback-demo.comeback`. Expect exactly:
 
 ```text
 [comeback 0:20 · demo "Settings" · /tmp/comeback-demo.comeback]
@@ -2025,7 +2025,7 @@ Contact sheet: /tmp/comeback-demo.comeback/contact-sheet.png
 ```
 
   Open `/tmp/comeback-demo.comeback/contact-sheet.png` and confirm that the frames are in time order and each one has a `#N M:SS` badge, the first shows a yellow ripple on the blue button, and one shows the red circle.
-- [ ] Commit: `git add -A && git commit -m "feat(cli): add demo and inspect commands"`
+- [x] Commit: `git add -A && git commit -m "feat(cli): add demo and inspect commands"`
 
 ---
 
@@ -2034,7 +2034,7 @@ Contact sheet: /tmp/comeback-demo.comeback/contact-sheet.png
 **Files:**
 - Create: `.github/workflows/ci.yml`
 
-- [ ] Create `.github/workflows/ci.yml`:
+- [x] Create `.github/workflows/ci.yml`:
 
 ```yaml
 name: ci
@@ -2056,8 +2056,8 @@ jobs:
       - run: cargo run -q -p comeback -- demo --out "$RUNNER_TEMP/demo.comeback"
 ```
 
-- [ ] Run `cargo fmt --all`, then `cargo clippy --workspace --all-targets -- -D warnings`. Expect no warnings. Fix any clippy finding in place without changing behavior, and rerun `cargo test --workspace` (expect all 31 tests to pass).
-- [ ] Commit: `git add -A && git commit -m "ci: add fmt, clippy, test and demo checks"`
+- [x] Run `cargo fmt --all`, then `cargo clippy --workspace --all-targets -- -D warnings`. Expect no warnings. Fix any clippy finding in place without changing behavior, and rerun `cargo test --workspace` (expect all 31 tests to pass).
+- [x] Commit: `git add -A && git commit -m "ci: add fmt, clippy, test and demo checks"`
 
 ---
 
