@@ -379,7 +379,7 @@ pub fn fmt_ms(ms: u64) -> String {
 - Create: `crates/comeback-core/src/grid.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod grid;`)
 
-- [ ] Create `grid.rs` holding only the tests:
+- [x] Create `grid.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -418,8 +418,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core grid`. Expect a compile FAIL: `cannot find type LumaGrid`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core grid`. Expect a compile FAIL: `cannot find type LumaGrid`.
+- [x] Add above the tests:
 
 ```rust
 use image::RgbImage;
@@ -484,8 +484,8 @@ impl LumaGrid {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core grid`. Expect `3 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): add luma grid for scene diffs"`
+- [x] Run `cargo test -p comeback-core grid`. Expect `3 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): add luma grid for scene diffs"`
 
 ---
 
