@@ -340,7 +340,7 @@ pub struct Word {
 - Create: `crates/comeback-core/src/time.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod time;`)
 
-- [ ] Create `time.rs` holding only the test:
+- [x] Create `time.rs` holding only the test:
 
 ```rust
 #[cfg(test)]
@@ -357,8 +357,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core time`. Expect a compile FAIL: `cannot find function fmt_ms`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core time`. Expect a compile FAIL: `cannot find function fmt_ms`.
+- [x] Add above the tests:
 
 ```rust
 /// Milliseconds as `M:SS`, truncating partial seconds.
@@ -368,8 +368,8 @@ pub fn fmt_ms(ms: u64) -> String {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core time`. Expect `1 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): add M:SS time formatting"`
+- [x] Run `cargo test -p comeback-core time`. Expect `1 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): add M:SS time formatting"`
 
 ---
 
