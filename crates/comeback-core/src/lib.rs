@@ -7,3 +7,4 @@ pub mod render;
 pub mod sheet;
 pub mod summary;
 pub mod compile;
+pub mod bundle;

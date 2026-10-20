@@ -1645,7 +1645,7 @@ pub fn compile(
 - Create: `crates/comeback-core/src/bundle.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod bundle;`)
 
-- [ ] Create `bundle.rs` holding only the tests:
+- [x] Create `bundle.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1680,8 +1680,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core bundle`. Expect a compile FAIL: `cannot find function latest`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core bundle`. Expect a compile FAIL: `cannot find function latest`.
+- [x] Add above the tests:
 
 ```rust
 use std::fs;
@@ -1732,9 +1732,9 @@ pub fn resolve(arg: &str, captures: &Path) -> Result<PathBuf> {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core bundle`. Expect `3 passed`.
-- [ ] Run `cargo test -p comeback-core`. Expect every core test to pass (29 total).
-- [ ] Commit: `git add -A && git commit -m "feat(core): load bundles and resolve latest"`
+- [x] Run `cargo test -p comeback-core bundle`. Expect `3 passed`.
+- [x] Run `cargo test -p comeback-core`. Expect every core test to pass (29 total).
+- [x] Commit: `git add -A && git commit -m "feat(core): load bundles and resolve latest"`
 
 ---
 
