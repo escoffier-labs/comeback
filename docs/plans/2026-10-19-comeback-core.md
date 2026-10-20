@@ -1488,7 +1488,7 @@ pub fn summary_md(m: &Manifest, dir: &Path) -> String {
 - Create: `crates/comeback-core/src/compile.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod compile;`)
 
-- [ ] Create `compile.rs` holding only the test:
+- [x] Create `compile.rs` holding only the test:
 
 ```rust
 #[cfg(test)]
@@ -1543,8 +1543,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core compile`. Expect a compile FAIL: `cannot find struct CompileInput`.
-- [ ] Add above the test:
+- [x] Run `cargo test -p comeback-core compile`. Expect a compile FAIL: `cannot find struct CompileInput`.
+- [x] Add above the test:
 
 ```rust
 use std::fs;
@@ -1634,8 +1634,8 @@ pub fn compile(
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core compile`. Expect `1 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): compile a timeline into a bundle"`
+- [x] Run `cargo test -p comeback-core compile`. Expect `1 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): compile a timeline into a bundle"`
 
 ---
 
