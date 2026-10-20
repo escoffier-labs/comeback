@@ -69,11 +69,18 @@ pub fn layout(aspects: &[f64]) -> (u32, u32, Vec<Cell>) {
             h: ((h * f).floor() as u32).max(1),
         })
         .collect();
-    ((canvas_w * f).floor() as u32, (canvas_h * f).floor() as u32, cells)
+    (
+        (canvas_w * f).floor() as u32,
+        (canvas_h * f).floor() as u32,
+        cells,
+    )
 }
 
 pub fn render_sheet(frames: &[RgbImage]) -> RgbImage {
-    let aspects: Vec<f64> = frames.iter().map(|f| f.width() as f64 / f.height() as f64).collect();
+    let aspects: Vec<f64> = frames
+        .iter()
+        .map(|f| f.width() as f64 / f.height() as f64)
+        .collect();
     let (w, h, cells) = layout(&aspects);
     let mut canvas = RgbImage::from_pixel(w, h, BG);
     for (frame, c) in frames.iter().zip(cells) {
@@ -97,7 +104,10 @@ mod tests {
         }
         for pair in cells.windows(2) {
             let (a, b) = (pair[0], pair[1]);
-            assert!(b.y > a.y || (b.y == a.y && b.x >= a.x + a.w), "time order: {a:?} then {b:?}");
+            assert!(
+                b.y > a.y || (b.y == a.y && b.x >= a.x + a.w),
+                "time order: {a:?} then {b:?}"
+            );
         }
         (w, h, cells)
     }
@@ -118,7 +128,9 @@ mod tests {
 
     #[test]
     fn twelve_mixed_frames_fit() {
-        check(&[1.78, 1.78, 0.46, 1.33, 1.78, 2.4, 1.0, 1.78, 0.46, 1.78, 1.78, 1.33]);
+        check(&[
+            1.78, 1.78, 0.46, 1.33, 1.78, 2.4, 1.0, 1.78, 0.46, 1.78, 1.78, 1.33,
+        ]);
     }
 
     #[test]

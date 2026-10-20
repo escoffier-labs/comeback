@@ -71,7 +71,11 @@ mod tests {
     #[test]
     fn identical_images_do_not_differ() {
         assert_eq!(solid(10).diff(&solid(10)), 0.0);
-        assert_eq!(solid(10).diff(&solid(20)), 0.0, "delta 10 is under the cell threshold");
+        assert_eq!(
+            solid(10).diff(&solid(20)),
+            0.0,
+            "delta 10 is under the cell threshold"
+        );
     }
 
     #[test]

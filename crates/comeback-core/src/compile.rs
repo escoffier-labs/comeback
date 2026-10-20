@@ -4,8 +4,8 @@ use std::path::Path;
 use anyhow::{Context, Result};
 use image::RgbImage;
 
-use crate::keyframes::{select, Candidate, KeyframeConfig, SelectInput};
-use crate::model::{Event, Keyframe, Manifest, Mark, PageEvent, Target, Transcript, Word, SCHEMA};
+use crate::keyframes::{Candidate, KeyframeConfig, SelectInput, select};
+use crate::model::{Event, Keyframe, Manifest, Mark, PageEvent, SCHEMA, Target, Transcript, Word};
 use crate::render::{draw_badge, draw_ripple};
 use crate::sheet::render_sheet;
 use crate::summary::summary_md;
@@ -43,7 +43,8 @@ pub fn compile(
         },
         cfg,
     );
-    fs::create_dir_all(out.join("frames")).with_context(|| format!("creating {}", out.display()))?;
+    fs::create_dir_all(out.join("frames"))
+        .with_context(|| format!("creating {}", out.display()))?;
 
     let mut marks = input.marks;
     let mut frames = Vec::with_capacity(selected.len());
@@ -56,14 +57,24 @@ pub fn compile(
         }
         draw_badge(&mut img, n, s.at_ms);
         let file = format!("frames/frame-{n:02}.png");
-        img.save(out.join(&file)).with_context(|| format!("writing {file}"))?;
+        img.save(out.join(&file))
+            .with_context(|| format!("writing {file}"))?;
         for m in marks.iter_mut().filter(|m| s.mark_ids.contains(&m.id)) {
             m.keyframe = Some(n);
         }
-        keyframes.push(Keyframe { n, at_ms: s.at_ms, reason: s.reason, file, said: s.said.clone(), action: s.action.clone() });
+        keyframes.push(Keyframe {
+            n,
+            at_ms: s.at_ms,
+            reason: s.reason,
+            file,
+            said: s.said.clone(),
+            action: s.action.clone(),
+        });
         frames.push(img);
     }
-    render_sheet(&frames).save(out.join("contact-sheet.png")).context("writing contact-sheet.png")?;
+    render_sheet(&frames)
+        .save(out.join("contact-sheet.png"))
+        .context("writing contact-sheet.png")?;
 
     let manifest = Manifest {
         schema: SCHEMA,
@@ -76,10 +87,17 @@ pub fn compile(
         marks,
         events: input.events,
         page: input.page,
-        transcript: input.transcript_model.map(|model| Transcript { model, words: input.words }),
+        transcript: input.transcript_model.map(|model| Transcript {
+            model,
+            words: input.words,
+        }),
         notes: input.notes,
     };
-    fs::write(out.join("comeback.json"), serde_json::to_vec_pretty(&manifest)?).context("writing comeback.json")?;
+    fs::write(
+        out.join("comeback.json"),
+        serde_json::to_vec_pretty(&manifest)?,
+    )
+    .context("writing comeback.json")?;
     fs::write(out.join("summary.md"), summary_md(&manifest, out)).context("writing summary.md")?;
     Ok(manifest)
 }
@@ -98,7 +116,13 @@ mod tests {
             id: "comeback-1".into(),
             started_at: "2026-10-19T00:00:00Z".into(),
             backend: "test".into(),
-            target: Target { kind: TargetKind::Screen, rect: [0, 0, 640, 360], scale: 1.0, app: None, title: None },
+            target: Target {
+                kind: TargetKind::Screen,
+                rect: [0, 0, 640, 360],
+                scale: 1.0,
+                app: None,
+                title: None,
+            },
             duration_ms: 10_000,
             events: vec![Event {
                 at_ms: 2_000,
@@ -123,14 +147,27 @@ mod tests {
             page: vec![],
             notes: vec![],
         };
-        let m = compile(input, &KeyframeConfig::default(), |_| Ok(RgbImage::from_pixel(640, 360, Rgb([40, 40, 40]))), &out).unwrap();
+        let m = compile(
+            input,
+            &KeyframeConfig::default(),
+            |_| Ok(RgbImage::from_pixel(640, 360, Rgb([40, 40, 40]))),
+            &out,
+        )
+        .unwrap();
         assert_eq!(m.keyframes.len(), 2);
         assert_eq!(m.marks[0].keyframe, Some(2));
         assert!(m.transcript.is_none());
-        for f in ["comeback.json", "summary.md", "contact-sheet.png", "frames/frame-01.png", "frames/frame-02.png"] {
+        for f in [
+            "comeback.json",
+            "summary.md",
+            "contact-sheet.png",
+            "frames/frame-01.png",
+            "frames/frame-02.png",
+        ] {
             assert!(out.join(f).is_file(), "missing {f}");
         }
-        let back: Manifest = serde_json::from_slice(&std::fs::read(out.join("comeback.json")).unwrap()).unwrap();
+        let back: Manifest =
+            serde_json::from_slice(&std::fs::read(out.join("comeback.json")).unwrap()).unwrap();
         assert_eq!(back, m);
     }
 }

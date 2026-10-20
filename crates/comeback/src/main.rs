@@ -9,7 +9,11 @@ use clap::{Parser, Subcommand};
 use comeback_core::{bundle, summary};
 
 #[derive(Parser)]
-#[command(name = "comeback", version, about = "Show an agent the problem: screen, voice and ink in one bundle")]
+#[command(
+    name = "comeback",
+    version,
+    about = "Show an agent the problem: screen, voice and ink in one bundle"
+)]
 struct Cli {
     #[command(subcommand)]
     cmd: Cmd,
@@ -37,12 +41,17 @@ fn captures_dir() -> PathBuf {
     }
     let data = std::env::var_os("XDG_DATA_HOME")
         .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from(std::env::var_os("HOME").unwrap_or_default()).join(".local/share"));
+        .unwrap_or_else(|| {
+            PathBuf::from(std::env::var_os("HOME").unwrap_or_default()).join(".local/share")
+        });
     data.join("comeback/captures")
 }
 
 fn now_ms() -> u128 {
-    SystemTime::now().duration_since(UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0)
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_millis())
+        .unwrap_or(0)
 }
 
 fn run(cli: Cli) -> Result<()> {

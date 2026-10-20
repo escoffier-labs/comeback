@@ -12,7 +12,14 @@ pub fn paste_text(m: &Manifest, dir: &Path) -> String {
         _ => String::new(),
     };
     let mut s = String::new();
-    writeln!(s, "[comeback {}{} · {}]", fmt_ms(m.duration_ms), target, dir.display()).unwrap();
+    writeln!(
+        s,
+        "[comeback {}{} · {}]",
+        fmt_ms(m.duration_ms),
+        target,
+        dir.display()
+    )
+    .unwrap();
     for n in &m.notes {
         writeln!(s, "Note: {n}").unwrap();
     }
@@ -26,7 +33,12 @@ pub fn paste_text(m: &Manifest, dir: &Path) -> String {
         }
         writeln!(s, "{line}").unwrap();
     }
-    writeln!(s, "Contact sheet: {}", dir.join("contact-sheet.png").display()).unwrap();
+    writeln!(
+        s,
+        "Contact sheet: {}",
+        dir.join("contact-sheet.png").display()
+    )
+    .unwrap();
     s
 }
 
@@ -96,12 +108,17 @@ Contact sheet: /tmp/b.comeback/contact-sheet.png
         let mut m = manifest();
         m.notes.push("transcription failed (no model)".into());
         let got = paste_text(&m, Path::new("/b"));
-        assert_eq!(got.lines().nth(1), Some("Note: transcription failed (no model)"));
+        assert_eq!(
+            got.lines().nth(1),
+            Some("Note: transcription failed (no model)")
+        );
     }
 
     #[test]
     fn summary_lists_frame_paths() {
         let got = summary_md(&manifest(), Path::new("/b"));
-        assert!(got.ends_with("\nFrames:\n- #1 /b/frames/frame-01.png\n- #2 /b/frames/frame-02.png\n"));
+        assert!(
+            got.ends_with("\nFrames:\n- #1 /b/frames/frame-01.png\n- #2 /b/frames/frame-02.png\n")
+        );
     }
 }

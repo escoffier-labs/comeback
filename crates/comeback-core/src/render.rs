@@ -1,4 +1,4 @@
-use ab_glyph::{point, Font, FontRef, PxScale, ScaleFont};
+use ab_glyph::{Font, FontRef, PxScale, ScaleFont, point};
 use image::{Rgb, RgbImage};
 
 use crate::time::fmt_ms;
@@ -52,7 +52,13 @@ pub fn draw_text(img: &mut RgbImage, x: f32, y: f32, px: f32, color: Rgb<u8>, te
         if let Some(o) = f.outline_glyph(glyph) {
             let b = o.px_bounds();
             o.draw(|gx, gy, cov| {
-                blend(img, b.min.x as i32 + gx as i32, b.min.y as i32 + gy as i32, color, cov);
+                blend(
+                    img,
+                    b.min.x as i32 + gx as i32,
+                    b.min.y as i32 + gy as i32,
+                    color,
+                    cov,
+                );
             });
         }
     }
@@ -111,7 +117,11 @@ mod tests {
         draw_ripple(&mut img, 0.5, 0.5);
         // radius = clamp(640 / 60, 10, 40), about 10.7
         assert_ne!(*img.get_pixel(330, 180), Rgb([0, 0, 0]));
-        assert_eq!(*img.get_pixel(320, 180), Rgb([0, 0, 0]), "the centre stays clear");
+        assert_eq!(
+            *img.get_pixel(320, 180),
+            Rgb([0, 0, 0]),
+            "the centre stays clear"
+        );
     }
 
     #[test]

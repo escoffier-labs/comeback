@@ -110,7 +110,10 @@ pub fn scene_transitions(c: &[Candidate], cfg: &KeyframeConfig) -> Vec<Transitio
             }
             j += 1;
         }
-        out.push(Transition { start_ms: c[i].at_ms, settled_ms: c[j].at_ms });
+        out.push(Transition {
+            start_ms: c[i].at_ms,
+            settled_ms: c[j].at_ms,
+        });
         settled = j;
         i = j + 1;
     }
@@ -138,13 +141,22 @@ fn group_marks<'m>(input: &SelectInput<'m>, cfg: &KeyframeConfig) -> Vec<Vec<&'m
         if let Some(g) = groups.last_mut() {
             let first = g[0];
             let last = *g.last().expect("groups are never empty");
-            let click_between = input.events.iter().any(|e| e.at_ms > last.end_ms && e.at_ms < m.at_ms);
+            let click_between = input
+                .events
+                .iter()
+                .any(|e| e.at_ms > last.end_ms && e.at_ms < m.at_ms);
             let too_long = m.end_ms.saturating_sub(first.at_ms) > cfg.mark_group_max_ms;
-            let strokes: usize = g.iter().map(|x| x.strokes.len().max(1)).sum::<usize>() + m.strokes.len().max(1);
+            let strokes: usize =
+                g.iter().map(|x| x.strokes.len().max(1)).sum::<usize>() + m.strokes.len().max(1);
             let too_many = strokes > cfg.mark_group_max_strokes;
-            let screen_changed = match (nearest(input.candidates, last.end_ms), nearest(input.candidates, m.at_ms)) {
+            let screen_changed = match (
+                nearest(input.candidates, last.end_ms),
+                nearest(input.candidates, m.at_ms),
+            ) {
                 (Some(a), Some(b)) => {
-                    a.grid.diff_in(&b.grid, padded_union(last.bbox, m.bbox, cfg.mark_bbox_pad)) >= cfg.mark_same_screen
+                    a.grid
+                        .diff_in(&b.grid, padded_union(last.bbox, m.bbox, cfg.mark_bbox_pad))
+                        >= cfg.mark_same_screen
                 }
                 _ => false,
             };
@@ -159,11 +171,15 @@ fn group_marks<'m>(input: &SelectInput<'m>, cfg: &KeyframeConfig) -> Vec<Vec<&'m
 }
 
 fn normalize(w: &str) -> String {
-    w.trim_matches(|c: char| !c.is_alphanumeric()).to_lowercase()
+    w.trim_matches(|c: char| !c.is_alphanumeric())
+        .to_lowercase()
 }
 
 fn accept(s: &Selected, chosen: &[Selected], input: &SelectInput, cfg: &KeyframeConfig) -> bool {
-    if chosen.iter().any(|c| c.at_ms.abs_diff(s.at_ms) < cfg.dedupe_ms) {
+    if chosen
+        .iter()
+        .any(|c| c.at_ms.abs_diff(s.at_ms) < cfg.dedupe_ms)
+    {
         return false;
     }
     // Cues must look new against every keyframe. Scene changes only against cues,
@@ -176,10 +192,13 @@ fn accept(s: &Selected, chosen: &[Selected], input: &SelectInput, cfg: &Keyframe
     let Some(mine) = nearest(input.candidates, s.at_ms) else {
         return true;
     };
-    chosen.iter().filter(|c| against_all || c.reason == Reason::Cue).all(|c| match nearest(input.candidates, c.at_ms) {
-        Some(theirs) => mine.grid.diff(&theirs.grid) >= cfg.cue_novelty,
-        None => true,
-    })
+    chosen
+        .iter()
+        .filter(|c| against_all || c.reason == Reason::Cue)
+        .all(|c| match nearest(input.candidates, c.at_ms) {
+            Some(theirs) => mine.grid.diff(&theirs.grid) >= cfg.cue_novelty,
+            None => true,
+        })
 }
 
 fn gaps(chosen: &[Selected], duration_ms: u64) -> Vec<(u64, u64)> {
@@ -211,7 +230,11 @@ fn fill_coverage(
         chosen.sort_by_key(|s| s.at_ms);
         let mut added = false;
         for (a, b) in gaps(chosen, input.duration_ms) {
-            let words = input.words.iter().filter(|w| w.start_ms >= a && w.start_ms < b).count();
+            let words = input
+                .words
+                .iter()
+                .filter(|w| w.start_ms >= a && w.start_ms < b)
+                .count();
             if b - a <= cfg.coverage_ms && words <= cfg.coverage_words {
                 continue;
             }
@@ -252,7 +275,10 @@ fn assign_words(sel: &mut [Selected], words: &[Word], cfg: &KeyframeConfig) {
     let mut idx: Vec<usize> = sel
         .iter()
         .map(|s| {
-            let mut i = words.iter().rposition(|w| w.start_ms <= s.anchor_ms).unwrap_or(0);
+            let mut i = words
+                .iter()
+                .rposition(|w| w.start_ms <= s.anchor_ms)
+                .unwrap_or(0);
             if words[i].end_ms < s.anchor_ms && i + 1 < words.len() && starts[i + 1] {
                 i += 1;
             }
@@ -267,8 +293,16 @@ fn assign_words(sel: &mut [Selected], words: &[Word], cfg: &KeyframeConfig) {
         idx[k] = idx[k].max(idx[k - 1]);
     }
     for k in 0..sel.len() {
-        let end = if k + 1 < sel.len() { idx[k + 1] } else { words.len() };
-        sel[k].said = words[idx[k]..end].iter().map(|w| w.w.as_str()).collect::<Vec<_>>().join(" ");
+        let end = if k + 1 < sel.len() {
+            idx[k + 1]
+        } else {
+            words.len()
+        };
+        sel[k].said = words[idx[k]..end]
+            .iter()
+            .map(|w| w.w.as_str())
+            .collect::<Vec<_>>()
+            .join(" ");
     }
 }
 
@@ -283,7 +317,11 @@ pub fn select(input: &SelectInput, cfg: &KeyframeConfig) -> Vec<Selected> {
                 at_ms: (last.end_ms + cfg.mark_frame_delay_ms).min(input.duration_ms),
                 anchor_ms: g[0].at_ms,
                 reason: Reason::Mark,
-                action: Some(if g.len() == 1 { "marked".into() } else { format!("marked ×{}", g.len()) }),
+                action: Some(if g.len() == 1 {
+                    "marked".into()
+                } else {
+                    format!("marked ×{}", g.len())
+                }),
                 point: None,
                 mark_ids: g.iter().map(|m| m.id).collect(),
                 said: String::new(),
@@ -402,7 +440,11 @@ mod tests {
         }
     }
     fn word(w: &str, start_ms: u64, end_ms: u64) -> Word {
-        Word { w: w.into(), start_ms, end_ms }
+        Word {
+            w: w.into(),
+            start_ms,
+            end_ms,
+        }
     }
     fn mark(id: u32, at_ms: u64, end_ms: u64) -> Mark {
         Mark {
@@ -414,9 +456,21 @@ mod tests {
             keyframe: None,
         }
     }
-    fn run(duration_ms: u64, events: &[Event], marks: &[Mark], words: &[Word], candidates: &[Candidate]) -> Vec<Selected> {
+    fn run(
+        duration_ms: u64,
+        events: &[Event],
+        marks: &[Mark],
+        words: &[Word],
+        candidates: &[Candidate],
+    ) -> Vec<Selected> {
         select(
-            &SelectInput { duration_ms, events, marks, words, candidates },
+            &SelectInput {
+                duration_ms,
+                events,
+                marks,
+                words,
+                candidates,
+            },
             &KeyframeConfig::default(),
         )
     }
@@ -436,7 +490,13 @@ mod tests {
         c.push(cand(2_000, 128));
         c.extend((9..17).map(|i| cand(i * 250, 255)));
         let t = scene_transitions(&c, &KeyframeConfig::default());
-        assert_eq!(t, vec![Transition { start_ms: 2_000, settled_ms: 2_250 }]);
+        assert_eq!(
+            t,
+            vec![Transition {
+                start_ms: 2_000,
+                settled_ms: 2_250
+            }]
+        );
     }
 
     #[test]
@@ -452,7 +512,13 @@ mod tests {
 
     #[test]
     fn groups_marks_on_one_screen() {
-        let s = run(10_000, &[], &[mark(1, 1_000, 1_500), mark(2, 2_500, 3_000)], &[], &[]);
+        let s = run(
+            10_000,
+            &[],
+            &[mark(1, 1_000, 1_500), mark(2, 2_500, 3_000)],
+            &[],
+            &[],
+        );
         assert_eq!(s.len(), 1);
         assert_eq!(s[0].reason, Reason::Mark);
         assert_eq!(s[0].at_ms, 3_100);
@@ -523,11 +589,26 @@ mod tests {
             word("is", 3_750, 3_850),
             word("wrong.", 3_900, 4_300),
         ];
-        let s = run(5_000, &[click(600, None), click(3_500, None)], &[], &words, &[]);
+        let s = run(
+            5_000,
+            &[click(600, None), click(3_500, None)],
+            &[],
+            &words,
+            &[],
+        );
         assert_eq!(s[0].said, "The menu opens.");
         assert_eq!(s[1].said, "But this label is wrong.");
-        let s = run(5_000, &[click(600, None), click(2_000, None)], &[], &words, &[]);
-        assert_eq!(s[1].said, "But this label is wrong.", "an anchor in silence takes the next clause");
+        let s = run(
+            5_000,
+            &[click(600, None), click(2_000, None)],
+            &[],
+            &words,
+            &[],
+        );
+        assert_eq!(
+            s[1].said, "But this label is wrong.",
+            "an anchor in silence takes the next clause"
+        );
     }
 
     #[test]

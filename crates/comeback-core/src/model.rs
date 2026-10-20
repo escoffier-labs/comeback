@@ -161,7 +161,11 @@ mod tests {
             page: vec![],
             transcript: Some(Transcript {
                 model: "small.en".into(),
-                words: vec![Word { w: "hi".into(), start_ms: 4_000, end_ms: 4_200 }],
+                words: vec![Word {
+                    w: "hi".into(),
+                    start_ms: 4_000,
+                    end_ms: 4_200,
+                }],
             }),
             notes: vec![],
         }

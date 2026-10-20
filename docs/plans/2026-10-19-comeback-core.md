@@ -2034,7 +2034,7 @@ Contact sheet: /tmp/comeback-demo.comeback/contact-sheet.png
 **Files:**
 - Create: `.github/workflows/ci.yml`
 
-- [ ] Create `.github/workflows/ci.yml`:
+- [x] Create `.github/workflows/ci.yml`:
 
 ```yaml
 name: ci
@@ -2056,8 +2056,8 @@ jobs:
       - run: cargo run -q -p comeback -- demo --out "$RUNNER_TEMP/demo.comeback"
 ```
 
-- [ ] Run `cargo fmt --all`, then `cargo clippy --workspace --all-targets -- -D warnings`. Expect no warnings. Fix any clippy finding in place without changing behavior, and rerun `cargo test --workspace` (expect all 31 tests to pass).
-- [ ] Commit: `git add -A && git commit -m "ci: add fmt, clippy, test and demo checks"`
+- [x] Run `cargo fmt --all`, then `cargo clippy --workspace --all-targets -- -D warnings`. Expect no warnings. Fix any clippy finding in place without changing behavior, and rerun `cargo test --workspace` (expect all 31 tests to pass).
+- [x] Commit: `git add -A && git commit -m "ci: add fmt, clippy, test and demo checks"`
 
 ---
 

@@ -4,7 +4,7 @@
 use std::path::Path;
 
 use anyhow::Result;
-use comeback_core::compile::{compile, CompileInput};
+use comeback_core::compile::{CompileInput, compile};
 use comeback_core::grid::LumaGrid;
 use comeback_core::keyframes::{Candidate, KeyframeConfig};
 use comeback_core::model::{Event, EventKind, Manifest, Mark, Target, TargetKind, Word};
@@ -24,7 +24,11 @@ fn rect(img: &mut RgbImage, x0: f64, y0: f64, x1: f64, y1: f64, c: Rgb<u8>) {
 }
 
 fn frame(t: u64, w: u32, h: u32) -> RgbImage {
-    let bg = if t >= 12_000 { Rgb([230, 230, 230]) } else { Rgb([40, 44, 52]) };
+    let bg = if t >= 12_000 {
+        Rgb([230, 230, 230])
+    } else {
+        Rgb([40, 44, 52])
+    };
     let mut img = RgbImage::from_pixel(w, h, bg);
     rect(&mut img, 0.05, 0.05, 0.95, 0.12, Rgb([70, 74, 82]));
     rect(&mut img, 0.45, 0.88, 0.57, 0.97, Rgb([40, 110, 220]));
@@ -69,7 +73,11 @@ fn words() -> Vec<Word> {
         ("white.", 13_700, 14_100),
     ]
     .into_iter()
-    .map(|(w, s, e)| Word { w: w.into(), start_ms: s, end_ms: e })
+    .map(|(w, s, e)| Word {
+        w: w.into(),
+        start_ms: s,
+        end_ms: e,
+    })
     .collect()
 }
 
@@ -96,7 +104,10 @@ fn mark() -> Mark {
 
 pub fn run(out: &Path, id: String) -> Result<Manifest> {
     let candidates = (0..=DURATION_MS / 250)
-        .map(|i| Candidate { at_ms: i * 250, grid: LumaGrid::from_image(&frame(i * 250, 480, 270)) })
+        .map(|i| Candidate {
+            at_ms: i * 250,
+            grid: LumaGrid::from_image(&frame(i * 250, 480, 270)),
+        })
         .collect();
     let input = CompileInput {
         id,
@@ -126,5 +137,10 @@ pub fn run(out: &Path, id: String) -> Result<Manifest> {
         page: vec![],
         notes: vec![],
     };
-    compile(input, &KeyframeConfig::default(), |t| Ok(frame(t, 1280, 720)), out)
+    compile(
+        input,
+        &KeyframeConfig::default(),
+        |t| Ok(frame(t, 1280, 720)),
+        out,
+    )
 }
