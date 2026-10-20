@@ -1360,7 +1360,7 @@ pub fn render_sheet(frames: &[RgbImage]) -> RgbImage {
 - Create: `crates/comeback-core/src/summary.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod summary;`)
 
-- [ ] Create `summary.rs` holding only the tests:
+- [x] Create `summary.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1430,8 +1430,8 @@ Contact sheet: /tmp/b.comeback/contact-sheet.png
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core summary`. Expect a compile FAIL: `cannot find function paste_text`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core summary`. Expect a compile FAIL: `cannot find function paste_text`.
+- [x] Add above the tests:
 
 ```rust
 use std::fmt::Write;
@@ -1477,8 +1477,8 @@ pub fn summary_md(m: &Manifest, dir: &Path) -> String {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core summary`. Expect `3 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): render paste text and summary.md"`
+- [x] Run `cargo test -p comeback-core summary`. Expect `3 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): render paste text and summary.md"`
 
 ---
 
