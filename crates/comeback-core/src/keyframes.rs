@@ -366,7 +366,8 @@ pub fn select(input: &SelectInput, cfg: &KeyframeConfig) -> Vec<Selected> {
             .iter()
             .find(|t| t.start_ms >= lo && t.start_ms <= hi)
             .map(|t| t.settled_ms)
-            .unwrap_or(w.start_ms + cfg.cue_fallback_ms);
+            .unwrap_or(w.start_ms + cfg.cue_fallback_ms)
+            .min(input.duration_ms);
         pool.push(Selected {
             at_ms,
             anchor_ms: w.start_ms,
@@ -651,5 +652,11 @@ mod tests {
         assert_eq!((s[1].reason, s[1].at_ms), (Reason::Cue, 7_500));
         assert_eq!(s[0].said, "Clicked it.");
         assert_eq!(s[1].said, "Intro. now watch this.");
+    }
+
+    #[test]
+    fn cue_frames_stay_inside_the_recording() {
+        let s = run(10_000, &[], &[], &[word("now", 9_950, 10_000)], &[]);
+        assert_eq!(s[0].at_ms, 10_000);
     }
 }
