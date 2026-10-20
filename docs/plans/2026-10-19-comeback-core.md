@@ -1064,7 +1064,7 @@ pub fn select(input: &SelectInput, cfg: &KeyframeConfig) -> Vec<Selected> {
 - Create: `crates/comeback-core/src/render.rs`
 - Modify: `crates/comeback-core/src/lib.rs` (add `pub mod render;`)
 
-- [ ] Create `render.rs` holding only the tests:
+- [x] Create `render.rs` holding only the tests:
 
 ```rust
 #[cfg(test)]
@@ -1096,8 +1096,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core render`. Expect a compile FAIL: `cannot find function draw_badge`.
-- [ ] Add above the tests:
+- [x] Run `cargo test -p comeback-core render`. Expect a compile FAIL: `cannot find function draw_badge`.
+- [x] Add above the tests:
 
 ```rust
 use ab_glyph::{point, Font, FontRef, PxScale, ScaleFont};
@@ -1195,8 +1195,8 @@ pub fn draw_ripple(img: &mut RgbImage, x: f64, y: f64) {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core render`. Expect `3 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): draw keyframe badges and click ripples"`
+- [x] Run `cargo test -p comeback-core render`. Expect `3 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): draw keyframe badges and click ripples"`
 
 ---
 

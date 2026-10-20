@@ -3,3 +3,4 @@ pub mod model;
 pub mod time;
 pub mod grid;
 pub mod keyframes;
+pub mod render;
