@@ -138,7 +138,7 @@ cp /usr/share/doc/fonts-dejavu-core/copyright crates/comeback-core/assets/DejaVu
 - Create: `crates/comeback-core/src/model.rs`
 - Modify: `crates/comeback-core/src/lib.rs`
 
-- [ ] Add `pub mod model;` to `lib.rs`, then create `model.rs` holding only the test:
+- [x] Add `pub mod model;` to `lib.rs`, then create `model.rs` holding only the test:
 
 ```rust
 #[cfg(test)]
@@ -200,8 +200,8 @@ mod tests {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core model`. Expect a compile FAIL: `cannot find type Manifest`.
-- [ ] Put this above the test module in `model.rs`:
+- [x] Run `cargo test -p comeback-core model`. Expect a compile FAIL: `cannot find type Manifest`.
+- [x] Put this above the test module in `model.rs`:
 
 ```rust
 use serde::{Deserialize, Serialize};
@@ -329,8 +329,8 @@ pub struct Word {
 }
 ```
 
-- [ ] Run `cargo test -p comeback-core model`. Expect `1 passed`.
-- [ ] Commit: `git add -A && git commit -m "feat(core): add comeback.json manifest types"`
+- [x] Run `cargo test -p comeback-core model`. Expect `1 passed`.
+- [x] Commit: `git add -A && git commit -m "feat(core): add comeback.json manifest types"`
 
 ---
 
