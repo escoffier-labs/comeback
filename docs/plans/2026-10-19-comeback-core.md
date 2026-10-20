@@ -1746,7 +1746,7 @@ pub fn resolve(arg: &str, captures: &Path) -> Result<PathBuf> {
 
 The captures directory is `$COMEBACK_CAPTURES_DIR` when set (tests use this), else `$XDG_DATA_HOME/comeback/captures`, else `$HOME/.local/share/comeback/captures`. `demo` without `--out` writes `comeback-<unix_ms>.comeback` there.
 
-- [ ] Create `crates/comeback/tests/cli.rs`:
+- [x] Create `crates/comeback/tests/cli.rs`:
 
 ```rust
 use std::process::Command;
@@ -1794,8 +1794,8 @@ fn inspect_reports_missing_captures() {
 }
 ```
 
-- [ ] Run `cargo test -p comeback --test cli`. Expect FAIL: `demo_then_inspect` panics because the binary has no subcommands (the status is not success).
-- [ ] Create `crates/comeback/src/demo.rs`:
+- [x] Run `cargo test -p comeback --test cli`. Expect FAIL: `demo_then_inspect` panics because the binary has no subcommands (the status is not success).
+- [x] Create `crates/comeback/src/demo.rs`:
 
 ```rust
 //! A synthetic 20 s capture: a click on "New tab" at 0:03, a panel appearing at 0:05,
@@ -1930,7 +1930,7 @@ pub fn run(out: &Path, id: String) -> Result<Manifest> {
 }
 ```
 
-- [ ] Replace `crates/comeback/src/main.rs`:
+- [x] Replace `crates/comeback/src/main.rs`:
 
 ```rust
 mod demo;
@@ -2012,8 +2012,8 @@ fn main() -> ExitCode {
 }
 ```
 
-- [ ] Run `cargo test -p comeback --test cli`. Expect `2 passed`.
-- [ ] Run `cargo run -q -p comeback -- demo --out /tmp/comeback-demo.comeback`. Expect exactly:
+- [x] Run `cargo test -p comeback --test cli`. Expect `2 passed`.
+- [x] Run `cargo run -q -p comeback -- demo --out /tmp/comeback-demo.comeback`. Expect exactly:
 
 ```text
 [comeback 0:20 · demo "Settings" · /tmp/comeback-demo.comeback]
@@ -2025,7 +2025,7 @@ Contact sheet: /tmp/comeback-demo.comeback/contact-sheet.png
 ```
 
   Open `/tmp/comeback-demo.comeback/contact-sheet.png` and confirm that the frames are in time order and each one has a `#N M:SS` badge, the first shows a yellow ripple on the blue button, and one shows the red circle.
-- [ ] Commit: `git add -A && git commit -m "feat(cli): add demo and inspect commands"`
+- [x] Commit: `git add -A && git commit -m "feat(cli): add demo and inspect commands"`
 
 ---
 
