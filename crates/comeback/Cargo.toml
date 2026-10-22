@@ -4,12 +4,20 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 
+[features]
+# Runs the test that calls the real whisper-cli with a real ggml model and a speech WAV.
+whisper-tests = []
+
 [dependencies]
 anyhow.workspace = true
 clap.workspace = true
 comeback-core = { path = "../comeback-core" }
+ctrlc.workspace = true
+libc.workspace = true
 image.workspace = true
 serde_json.workspace = true
+x11rb.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+x11rb.workspace = true
