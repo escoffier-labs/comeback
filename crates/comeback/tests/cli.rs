@@ -77,3 +77,50 @@ fn demo_refuses_an_existing_out() {
     assert_eq!(out.status.code(), Some(1));
     assert!(String::from_utf8_lossy(&out.stderr).contains("already exists"));
 }
+
+#[test]
+fn the_skill_prints_and_installs_without_clobbering() {
+    let shipped = std::fs::read_to_string(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../skills/comeback/SKILL.md"
+    ))
+    .unwrap();
+    assert!(shipped.starts_with("---\nname: comeback\n"));
+
+    let printed = comeback().arg("skill").output().unwrap();
+    assert!(printed.status.success());
+    assert_eq!(String::from_utf8(printed.stdout).unwrap(), shipped);
+
+    let dir = tempfile::tempdir().unwrap();
+    let out = comeback()
+        .args(["skill", "--install"])
+        .arg(dir.path())
+        .output()
+        .unwrap();
+    assert!(
+        out.status.success(),
+        "{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    let file = dir.path().join("comeback/SKILL.md");
+    assert_eq!(std::fs::read_to_string(&file).unwrap(), shipped);
+    // running it again is fine
+    assert!(
+        comeback()
+            .args(["skill", "--install"])
+            .arg(dir.path())
+            .status()
+            .unwrap()
+            .success()
+    );
+    // a different file in the way is not overwritten
+    std::fs::write(&file, "mine").unwrap();
+    let out = comeback()
+        .args(["skill", "--install"])
+        .arg(dir.path())
+        .output()
+        .unwrap();
+    assert_eq!(out.status.code(), Some(1));
+    assert!(String::from_utf8_lossy(&out.stderr).contains("already exists and differs"));
+    assert_eq!(std::fs::read_to_string(&file).unwrap(), "mine");
+}
